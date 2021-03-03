@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quoted
+{% endblock %}
+
+{% block main %}
+    <h2>{{ stock.symbol }}</h2>
+    <p><strong>{{ stock.name }}</strong></p>
+    <p><strong>{{ stock.price | usd }}</strong></p>
+{% endblock %}
