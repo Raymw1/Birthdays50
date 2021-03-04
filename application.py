@@ -211,8 +211,22 @@ def register():
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
-    """Sell shares of stock"""
-    return apology("TODO")
+    stocks = db.execute("SELECT symbol, shares FROM balances WHERE user_id = ?", session["user_id"])
+    if request.method == "POST":
+        if not request.form.get("symbol"):
+            return apology("must provide symbol", 400)
+        # elif request.form.get("symbol") not in stocks["symbol"]:
+        #     return apology("must provide a valid symbol", 400)
+        elif not request.form.get("shares"):
+            return apology("must provide number of shares", 400)
+        current_stock = ""
+        for stock in stocks:
+            if stock["symbol"] == request.form.get("symbol"):
+                current_stock = stock
+        if request.form.get("shares") >  stock["shares"]:
+            return apology("you do not have shares enough", 400)
+    else:
+        return render_template("sell.html", stocks=stocks)
 
 
 def errorhandler(e):
