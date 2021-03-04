@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+    <h2>My Stocks</h2>
+    <p><strong>Available Balance: </strong>{{ cash }}</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for balance in balances %}
+                <tr>
+                    <td>{{ balance.symbol }}</td>
+                    <td>{{ balance.name }}</td>
+                    <td>{{ balance.shares }}</td>
+                    <td>{{ balance.price }}</td>
+                    <td>{{ balance.total }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ spent }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

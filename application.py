@@ -54,8 +54,24 @@ if not os.environ.get("API_KEY"):
 @app.route("/")
 @login_required
 def index():
+    users = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+    user = users[0]
+    rows = db.execute("SELECT * FROM balances WHERE user_id = ?", session["user_id"])
+    balances = []
+    for row in rows:
+        balance = row
+        stock = lookup(balance["symbol"])
+        balance["price"] = stock["price"]
+        balance["total"] = stock["price"] * balance["shares"]
+        balance["name"] = stock["name"]
+        balances.append(balance)
+    total_spent = user["cash"] 
+    for balance in balances:
+        total_spent += balance["total"]
+    # stocks |  shares  |  current price |  total (shares*price)
     """Show portfolio of stocks"""
-    return apology("TODO")
+    return render_template("index.html", cash=user["cash"], balances=balances, spent=total_spent)
+    # return apology("TODO")
 
 
 @app.route("/buy", methods=["GET", "POST"])
