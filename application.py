@@ -106,7 +106,7 @@ def buy():
         db.execute("INSERT INTO  history (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)", session["user_id"], symbol, shares, stock["price"])
         new_cash = cash - total
         db.execute("UPDATE  users SET cash = ? WHERE id = ?",  new_cash, session["user_id"])
-        flash(f"Bought '{shares}' of '{symbol}' successfully", "success")
+        flash(f"Bought {shares} of {symbol} successfully", "success")
         return redirect("/")
     else:
         return render_template("buy.html")
@@ -116,7 +116,9 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    return apology("TODO")
+    history = db.execute("SELECT * FROM history WHERE user_id = ?", session["user_id"])
+    return render_template("history.html", history=history)
+    # return apology("TODO")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -211,22 +213,22 @@ def register():
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
-    stocks = db.execute("SELECT symbol, shares FROM balances WHERE user_id = ?", session["user_id"])
-    if request.method == "POST":
-        if not request.form.get("symbol"):
-            return apology("must provide symbol", 400)
-        # elif request.form.get("symbol") not in stocks["symbol"]:
-        #     return apology("must provide a valid symbol", 400)
-        elif not request.form.get("shares"):
-            return apology("must provide number of shares", 400)
-        current_stock = ""
-        for stock in stocks:
-            if stock["symbol"] == request.form.get("symbol"):
-                current_stock = stock
-        if request.form.get("shares") >  stock["shares"]:
-            return apology("you do not have shares enough", 400)
-    else:
-        return render_template("sell.html", stocks=stocks)
+    # stocks = db.execute("SELECT symbol FROM balances WHERE user_id = ?", session["user_id"])
+    # if request.method == "POST":
+    #     if request.form.get("symbol") not in stocks["symbol"]:
+    #         return apology("must provide a valid symbol", 400)
+    #     elif not request.form.get("shares"):
+    #         return apology("must provide number of shares", 400)
+    #     current_stock = ""
+    #     for stock in stocks:
+    #         if stock["symbol"] == request.form.get("symbol"):
+    #             current_stock = stock["symbol"]
+    #     shares = db.execute("SELECT shares FROM balances WHERE user_id = ? AND symbol = ?", session["user_id"], current_stock)
+    #     if request.form.get("shares") > shares["shares"]:
+    #         return apology("you do not have shares enough", 400)
+    # else:
+    #     return render_template("sell.html", stocks=stocks)
+    return apology("TODO", 400)
 
 
 def errorhandler(e):
