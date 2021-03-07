@@ -6,7 +6,7 @@
 
 {% block main %}
     <h2>My Stocks</h2>
-    <p><strong>Available Balance: </strong>{{ cash }}</p>
+    <p><strong>Available Balance: </strong>{{ cash | usd}}</p>
     <table class="table">
         <thead>
             <tr>
@@ -23,8 +23,8 @@
                     <td>{{ balance.symbol }}</td>
                     <td>{{ balance.name }}</td>
                     <td>{{ balance.shares }}</td>
-                    <td>{{ balance.price }}</td>
-                    <td>{{ balance.total }}</td>
+                    <td>{{ balance.price | usd}}</td>
+                    <td>{{ balance.total | usd }}</td>
                 </tr>
             {% endfor %}
             <tr>

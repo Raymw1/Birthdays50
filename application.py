@@ -153,7 +153,7 @@ def register():
     if request.method == "POST":
 
         # Ensure username was submitted
-        if not request.form.get("username") or request.form.get("username")  in db.execute("SELECT username FROM users"):
+        if not request.form.get("username"):
             return apology("must provide username", 403)
 
         # Ensure password was submitted
@@ -168,7 +168,7 @@ def register():
         new_user_id = db.execute("INSERT INTO  users (username, hash) VALUES (?, ?)", request.form.get("username"), hashed_password)
 
         session["user_id"] = new_user_id
-
+        flash("Registerd!")
         # Redirect user to home page
         return redirect("/")
     else:
