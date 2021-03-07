@@ -21,10 +21,10 @@
                 <tr>
                     <td>{{ item.symbol }}</td>
                     <td>
-                        {% if item.price > 0 %}
+                        {% if item.shares > 0 %}
                             <span class="badge badge-success">BUY</span>
                         {% else %}
-                        <span class="badge badge-success">BUY</span>
+                            <span class="badge badge-danger">SELL</span>
                         {% endif %}
                     </td>
                     <td>{{ item.shares }}</td>

@@ -215,26 +215,27 @@ def buy():
 @login_required
 def sell():
     if request.method == "POST":
+        # symbols = db.execute("SELECT symbol FROM balances WHERE user_id = ?", session["user_id"])
         symbol = request.form.get("symbol")
         shares = int(request.form.get("shares"))
         if not symbol:
-            return apology("must provide a stock symbol", 400)
+            return apology("must provide a valid stock symbol", 400)
         symbol = symbol.upper()
         stock = lookup(symbol)
-        balances = db.execute("SELECT * FROM balances WHERE id = ? AND  symbol = ?", session["user_id"], symbol)
+        balances = db.execute("SELECT * FROM balances WHERE user_id = ? AND  symbol = ?", session["user_id"], symbol)
         if len(balances) < 1:
             return apology(f"insufficient shares for symbol {symbol}", 400)
         balance = balances[0]
         if shares > balance["shares"]:
             return apology("insufficient shares for sale", 400)
-        row = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        
         balance["shares"] -= shares
         db.execute("UPDATE balances SET shares = ? WHERE id = ?", balance["shares"], balance["id"])
         
         db.execute("INSERT INTO  history (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)", session["user_id"], symbol, shares * -1, stock["price"])
         total = stock["price"] * shares
-        cash = row["cash"]
-        new_cash = cash + total
+        row = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        new_cash = row[0]["cash"] + total
         db.execute("UPDATE  users SET cash = ? WHERE id = ?",  new_cash, session["user_id"])
         flash(f"Sold {shares} of {symbol} successfully", "success")
         return redirect("/")
