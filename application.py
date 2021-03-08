@@ -5,9 +5,8 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-from werkzeug.security import check_password_hash, generate_password_hash
-
 from helpers import apology, login_required, lookup, usd
+from models import database, balances, history as hist, users, transactions
 
 # Configure application
 app = Flask(__name__)
@@ -35,16 +34,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///finance.db")
+db = database.db
 
-db.execute("""CREATE TABLE IF NOT EXISTS 'balances' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-                        'user_id' INTEGER NOT NULL, 'symbol' TEXT NOT NULL, 'shares' INTEGER NOT NULL, 
-                        FOREIGN KEY(user_id) REFERENCES users(id))""")
-db.execute("CREATE UNIQUE INDEX IF NOT EXISTS unique_balances_user_id_symbol ON balances (user_id, symbol)")
-db.execute("""CREATE TABLE IF NOT EXISTS 'history' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-                        'user_id' INTEGER NOT NULL, 'symbol' TEXT NOT NULL, 'shares' INTEGER NOT NULL, 'price' NUMERIC NOT NULL, 
-                        'created_at' DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user_id) REFERENCES users(id))""")
-db.execute("CREATE INDEX IF NOT EXISTS index_histoy_user_id ON balances (user_id)")
 
 # Make sure API key is set
 if not os.environ.get("API_KEY"):
@@ -54,24 +45,22 @@ if not os.environ.get("API_KEY"):
 @app.route("/")
 @login_required
 def index():
-    users = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
-    user = users[0]
-    rows = db.execute("SELECT * FROM balances WHERE user_id = ?", session["user_id"])
-    balances = []
+    user = users.get_user_by_user_id(session["user_id"])
+    rows = balances.get_balances_by_user_id(user["id"])
+    stocks = []
     for row in rows:
         balance = row
         stock = lookup(balance["symbol"])
         balance["price"] = stock["price"]
         balance["total"] = stock["price"] * balance["shares"]
         balance["name"] = stock["name"]
-        balances.append(balance)
+        stocks.append(balance)
     total_spent = user["cash"] 
-    for balance in balances:
+    for balance in stocks:
         total_spent += balance["total"]
     # stocks |  shares  |  current price |  total (shares*price)
     """Show portfolio of stocks"""
-    return render_template("index.html", cash=user["cash"], balances=balances, spent=total_spent)
-    # return apology("TODO")
+    return render_template("index.html", cash=user["cash"], balances=stocks, spent=total_spent)
 
 
 
@@ -80,10 +69,32 @@ def index():
 @login_required
 def history():
     """Show history of transactions"""
-    history = db.execute("SELECT * FROM history WHERE user_id = ?", session["user_id"])
-    return render_template("history.html", history=history)
-    # return apology("TODO")
+    rows = hist.get_history_by_user_id(session["user_id"])
+    return render_template("history.html", history=rows)
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            return apology("must provide username", 400)
+
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            return apology("must provide password", 403)
+
+        elif request.form.get("password") != request.form.get("confirmation"):
+            return apology("passwords do not match", 400)
+        
+        new_user_id = users.register(request.form.get("username"), request.form.get("password"))
+        
+        flash("Registerd!")
+        session["user_id"] = new_user_id
+        # Redirect user to home page
+        return redirect("/")
+    else:
+        return render_template("register.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -102,16 +113,13 @@ def login():
         # Ensure password was submitted
         elif not request.form.get("password"):
             return apology("must provide password", 403)
-
-        # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
-
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+        
+        user = users.get_user_by_username_password(request.form.get("username"), request.form.get("password"))
+        if not user:
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = user["id"]
 
         # Redirect user to home page
         return redirect("/")
@@ -119,6 +127,30 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
+
+
+@app.route("/change_pwd", methods=["GET", "POST"])
+def change_password():
+    if request.method == "POST":
+        # Ensure password was submitted
+        if not request.form.get("current_password"):
+            return apology("must provide current password", 403)
+        
+        if not request.form.get("password"):
+            return apology("must provide password", 403)
+
+        elif request.form.get("password") != request.form.get("confirmation"):
+            return apology("passwords do not match", 400)
+        
+        updated_successfully = users.update_password(session["user_id"], request.form.get("current_password"), request.form.get("password"))
+        if not updated_successfully:
+            flash("Invalid current password")
+            return render_template("change_password.html")
+        # Redirect user to home page
+        flash("Password updated successfully")
+        return redirect("/")
+    else:
+        return render_template("change_password.html")
 
 
 @app.route("/logout")
@@ -147,33 +179,7 @@ def quote():
     else:
         return render_template("quote.html")
 
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            return apology("must provide username", 400)
-
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            return apology("must provide password", 403)
-
-        elif request.form.get("password") != request.form.get("confirmation"):
-            return apology("passwords do not match", 400)
         
-        hashed_password = generate_password_hash(request.form.get("password"))
-        # Query database for username
-        new_user_id = db.execute("INSERT INTO  users (username, hash) VALUES (?, ?)", request.form.get("username"), hashed_password)
-
-        session["user_id"] = new_user_id
-        flash("Registerd!")
-        # Redirect user to home page
-        return redirect("/")
-    else:
-        return render_template("register.html")
-
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
@@ -189,7 +195,6 @@ def buy():
             return apology("must provide a valid stock symbol", 400)
         if not shares:
             return apology("must provide the number of shares", 400)
-        stock = lookup(symbol)
         symbol = symbol.upper()
         total = stock["price"] * shares
         row = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
@@ -215,32 +220,21 @@ def buy():
 @login_required
 def sell():
     if request.method == "POST":
-        # symbols = db.execute("SELECT symbol FROM balances WHERE user_id = ?", session["user_id"])
         symbol = request.form.get("symbol")
         shares = int(request.form.get("shares"))
         if not symbol:
             return apology("must provide a valid stock symbol", 400)
         symbol = symbol.upper()
         stock = lookup(symbol)
-        balances = db.execute("SELECT * FROM balances WHERE user_id = ? AND  symbol = ?", session["user_id"], symbol)
-        if len(balances) < 1:
-            return apology(f"insufficient shares for symbol {symbol}", 400)
-        balance = balances[0]
-        if shares > balance["shares"]:
-            return apology("insufficient shares for sale", 400)
-        
-        balance["shares"] -= shares
-        db.execute("UPDATE balances SET shares = ? WHERE id = ?", balance["shares"], balance["id"])
-        
-        db.execute("INSERT INTO  history (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)", session["user_id"], symbol, shares * -1, stock["price"])
-        total = stock["price"] * shares
-        row = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
-        new_cash = row[0]["cash"] + total
-        db.execute("UPDATE  users SET cash = ? WHERE id = ?",  new_cash, session["user_id"])
+        success, message = balances.sell_user_shares(session["user_id"], symbol, shares)
+        if not success:
+            return apology(message, 400)
+        hist.insert_new_entry(session["user_id"], symbol, shares * -1, stock["price"])
+        users.add_cash(session["user_id"], stock["price"] * shares, shares)
         flash(f"Sold {shares} of {symbol} successfully", "success")
         return redirect("/")
     else:
-        stocks = db.execute("SELECT * FROM balances WHERE user_id = ? AND shares > 0", session["user_id"])
+        stocks = balances.get_positive_stocks(session["user_id"])
         return render_template("sell.html", stocks=stocks)
 
 
