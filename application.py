@@ -82,14 +82,14 @@ def register():
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            return apology("must provide password", 400)
 
         elif request.form.get("password") != request.form.get("confirmation"):
             return apology("passwords do not match", 400)
         
         new_user_id = users.register(request.form.get("username"), request.form.get("password"))
         
-        flash("Registerd!")
+        flash("Registerd!", 200)
         session["user_id"] = new_user_id
         # Redirect user to home page
         return redirect("/")
@@ -120,7 +120,7 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = user["id"]
-
+        flash("Logged in", 200)
         # Redirect user to home page
         return redirect("/")
 
