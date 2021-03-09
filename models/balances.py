@@ -1,6 +1,7 @@
 from models.database import db
 
 def get_balances_by_user_id(id):
+    db.execute("DELETE FROM balances WHERE shares = 0")
     rows = db.execute("SELECT * FROM balances WHERE user_id = ?", id)
     return rows
 

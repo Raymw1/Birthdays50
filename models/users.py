@@ -12,13 +12,10 @@ def get_user_by_user_id(id):
 def get_user_by_username_password(username, password):
      # Query database for username
     rows = db.execute("SELECT * FROM users WHERE username = ?", username)
-    if len(rows) < 1:
-        return None
+    if  
     # Ensure username exists and password is correct
     if not check_password_hash(rows[0]["hash"], password):
-        None
-    else:
-        return rows[0]
+        return False    
 
 def register(username, password):
     hashed_password = generate_password_hash(password)
@@ -39,3 +36,13 @@ def add_cash(id, amount, shares):
     row = get_user_by_user_id(id)
     new_cash = row["cash"] + amount
     db.execute("UPDATE  users SET cash = ? WHERE id = ?",  new_cash, id)
+
+def verify_username(username):
+    usernamess = []
+    usernames = db.execute("SELECT username FROM users")
+    for name in usernames:
+        usernamess.append(name["username"])
+    if  username in usernamess:
+        return True
+    else:
+        return False

@@ -5,7 +5,5 @@
 {% endblock %}
 
 {% block main %}
-    <h2>{{ stock.symbol }}</h2>
-    <p><strong>{{ stock.name }}</strong></p>
-    <p><strong>{{ stock.price | usd }}</strong></p>
+    <p>A share of {{ stock.name }} ({{ stock.symbol }}) costs {{ stock.price | usd }}</p>
 {% endblock %}

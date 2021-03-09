@@ -75,19 +75,26 @@ def history():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirmation = request.form.get("confirmation")
         # Ensure username was submitted
-        if not request.form.get("username"):
+        if not username:
             return apology("must provide username", 400)
 
+        # Verify username
+        if  users.verify_username(username):
+            return apology("this username is already registered", 400)
+        # Verify username
+
         # Ensure password was submitted
-        elif not request.form.get("password"):
+        elif not password:
             return apology("must provide password", 400)
 
-        elif request.form.get("password") != request.form.get("confirmation"):
+        elif password != confirmation:
             return apology("passwords do not match", 400)
-        
-        new_user_id = users.register(request.form.get("username"), request.form.get("password"))
+
+        new_user_id = users.register(username, password)
         
         flash("Registerd!", 200)
         session["user_id"] = new_user_id
@@ -171,10 +178,10 @@ def quote():
     if request.method == "POST":
         symbol = request.form.get("symbol")
         if not symbol:
-            return apology("must provide a stock symbol", 403)
+            return apology("missing symbol", 400)
         stock = lookup(symbol)
         if not stock:
-            return apology("must provide a valid stock symbol", 403)
+            return apology("invalid symbol", 400)
         return render_template("quoted.html", stock=stock)
     else:
         return render_template("quote.html")
@@ -189,10 +196,10 @@ def buy():
         symbol = request.form.get("symbol")
         shares = int(request.form.get("shares"))
         if not symbol:
-            return apology("must provide a stock symbol", 400)
+            return apology("missing symbol", 400)
         stock = lookup(symbol)
         if not stock:
-            return apology("must provide a valid stock symbol", 400)
+            return apology("invalid symbol", 400)
         if not shares:
             return apology("must provide the number of shares", 400)
         symbol = symbol.upper()
@@ -200,7 +207,7 @@ def buy():
         row = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
         cash = row[0]["cash"]
         if cash < total:
-            return apology("insufficient balance", 400)
+            return apology("can't afford", 400)
         row = db.execute("SELECT * FROM balances WHERE id = ? AND  symbol = ?", session["user_id"], symbol)
         if len(row) < 1:
             db.execute("INSERT INTO  balances (user_id, symbol, shares) VALUES (?, ?, ?)", session["user_id"], symbol, shares)
