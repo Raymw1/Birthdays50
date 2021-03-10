@@ -7,6 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helpers import apology, login_required, lookup, usd
 from models import database, balances, history as hist, users, transactions
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
 app = Flask(__name__)
@@ -55,14 +56,12 @@ def index():
         balance["total"] = stock["price"] * balance["shares"]
         balance["name"] = stock["name"]
         stocks.append(balance)
-    total_spent = user["cash"] 
+    total_spent = user["cash"]
     for balance in stocks:
         total_spent += balance["total"]
     # stocks |  shares  |  current price |  total (shares*price)
     """Show portfolio of stocks"""
     return render_template("index.html", cash=user["cash"], balances=stocks, spent=total_spent)
-
-
 
 
 @app.route("/history")
@@ -95,7 +94,7 @@ def register():
             return apology("passwords do not match", 400)
 
         new_user_id = users.register(username, password)
-        
+
         flash("Registerd!", 200)
         session["user_id"] = new_user_id
         # Redirect user to home page
@@ -106,28 +105,29 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
     # Forget any user_id
     session.clear()
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-
+        username = request.form.get("username")
+        password = request.form.get("password")
         # Ensure username was submitted
-        if not request.form.get("username"):
+        if not username:
             return apology("must provide username", 403)
 
         # Ensure password was submitted
-        elif not request.form.get("password"):
+        elif not password:
             return apology("must provide password", 403)
-        
-        user = users.get_user_by_username_password(request.form.get("username"), request.form.get("password"))
-        if not user:
+
+        rows = db.execute("SELECT * FROM users WHERE username = ?", username)
+        # Ensure username exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], password):
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
-        session["user_id"] = user["id"]
-        flash("Logged in", 200)
+        flash("Logged!", 200)
+        session["user_id"] = rows[0]["id"]
         # Redirect user to home page
         return redirect("/")
 
@@ -142,13 +142,13 @@ def change_password():
         # Ensure password was submitted
         if not request.form.get("current_password"):
             return apology("must provide current password", 403)
-        
+
         if not request.form.get("password"):
             return apology("must provide password", 403)
 
         elif request.form.get("password") != request.form.get("confirmation"):
             return apology("passwords do not match", 400)
-        
+
         updated_successfully = users.update_password(session["user_id"], request.form.get("current_password"), request.form.get("password"))
         if not updated_successfully:
             flash("Invalid current password")
@@ -174,7 +174,7 @@ def logout():
 @app.route("/quote", methods=["GET", "POST"])
 @login_required
 def quote():
-    """Get stock quote."""  
+    """Get stock quote."""
     if request.method == "POST":
         symbol = request.form.get("symbol")
         if not symbol:
@@ -186,12 +186,12 @@ def quote():
     else:
         return render_template("quote.html")
 
-        
+
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
     """Buy shares of stock"""
-    """Get stock quote."""  
+    """Get stock quote."""
     if request.method == "POST":
         symbol = request.form.get("symbol")
         shares = int(request.form.get("shares"))

@@ -5,8 +5,6 @@
 {% endblock %}
 
 {% block main %}
-    <h2>My Stocks</h2>
-    <p><strong>Available Balance: </strong>{{ cash | usd}}</p>
     <table class="table">
         <thead>
             <tr>
@@ -27,13 +25,17 @@
                     <td>{{ balance.total | usd }}</td>
                 </tr>
             {% endfor %}
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{{ spent }}</td>
-            </tr>
+                <tr>
+                    <td>CASH</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ cash | usd}}</td>
+                </tr>
         </tbody>
+        <tfoot>
+            <td colspan="4"></td>
+            <td><strong>{{ spent | usd}}</strong></td>
+        </tfoot>
     </table>
 {% endblock %}

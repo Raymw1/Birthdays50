@@ -9,13 +9,6 @@ def get_user_by_user_id(id):
     else:
         return None
 
-def get_user_by_username_password(username, password):
-     # Query database for username
-    rows = db.execute("SELECT * FROM users WHERE username = ?", username)
-    if  
-    # Ensure username exists and password is correct
-    if not check_password_hash(rows[0]["hash"], password):
-        return False    
 
 def register(username, password):
     hashed_password = generate_password_hash(password)
