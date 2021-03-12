@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helpers import apology, login_required, lookup, usd
-from models import database, balances, history as hist, users, transactions
+from models import database, balances, history as hist, users
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
@@ -95,7 +95,7 @@ def register():
 
         new_user_id = users.register(username, password)
 
-        flash("Registerd!", 200)
+        flash("Registered!", 200)
         session["user_id"] = new_user_id
         # Redirect user to home page
         return redirect("/")
@@ -126,7 +126,6 @@ def login():
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
-        flash("Logged!", 200)
         session["user_id"] = rows[0]["id"]
         # Redirect user to home page
         return redirect("/")
