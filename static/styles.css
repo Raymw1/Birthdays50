@@ -21,7 +21,7 @@ body {
     background-color: #ffd447;
     color: #111111;
     margin-bottom: 2rem;
-    padding: 2rem 1rem;
+    padding: 1rem 1rem;
     text-align: center;
 }
 
@@ -37,10 +37,10 @@ body {
     transition: color 2s ease-in-out, background-color 0.15s ease-in-out;
 }
 
-h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 48px;
+nav.navbar.navbar-expand-md.navbar-light.bg-light.border {
+    margin-top: -35px;
 }
+
 
 button, input[type="submit"] {
     background-color: #d9edff;
@@ -81,3 +81,50 @@ tbody tr:nth-of-type(odd) {
     background-color: rgb(179, 208, 255, 0.3)
 }
 
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+/* Colors for brand */
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+
+main .form-control
+{
+    /* Center form controls */
+    display: inline-block;
+
+    /* Override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* Scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* Center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* Constrain images on small screens */
+    max-width: 100%;
+}
