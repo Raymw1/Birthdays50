@@ -1,7 +1,7 @@
 import os
 
 from cs50 import SQL
-from flask import Flask, flash, jsonify, redirect, render_template, request, session
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, send_file
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -34,18 +34,16 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = database.db
-
-
 @app.route("/", methods=["GET", "POST"])
-# @login_required
 def index():
+    session.clear()
     if request.method == "POST":
-        name = request.form.get("name")
-        month = request.form.get("month")
-        day = request.form.get("day")
-        db.execute("INSERT INTO birthdays (name, month, day) VALUES(?, ?, ?)", name, month, day)
-
-        return redirect("/")
+        # name = request.form.get("name")
+        # month = request.form.get("month")
+        # day = request.form.get("day")
+        # db.execute("INSERT INTO birthdays (name, month, day) VALUES(?, ?, ?)", name, month, day)
+        print("0")
+        # return redirect("/")
 
     else:
 

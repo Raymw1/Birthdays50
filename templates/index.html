@@ -1,29 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthdays: Homepage</title>
-    <link rel="stylesheet" href="../static/styles.css">
-</head>
-<body>
-    <div class="banner">
-        <header>
-            <nav>
-                <div class="cropped">
-                    <img src="../media/logo.jpg" class="logo" alt="logo">
-                </div>
-                <ul>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="register.html">Register</a></li>
-                </ul>
-            </nav>
-        </header>
-        <main>
-            <h1>BIRTHDAYS50</h1>
-            <p>You will never forget your friends' birthday!</p>
-        </main>
+{% extends "layout.html" %}
+
+{% block title %}
+    Welcome
+{% endblock %}
+
+{% block main %}
+    <h1>BIRTHDAYS50</h1>
+    <p>You will never forget your friends' birthday!</p>
+    <div>
+        <button type="button"><a href="/login"><span class="tohover"></span>LOGIN</a></button>
+        <button type="button"><a href="/register"><span class="tohover"></span>REGISTER</a></button>
     </div>
-</body>
-</html>
+{% endblock %}
