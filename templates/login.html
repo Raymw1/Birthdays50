@@ -5,14 +5,33 @@
 {% endblock %}
 
 {% block main %}
-    {% block h1 %}Login{% endblock %}
-    <form action="/login" method="post">
+    <!-- <form action="/login" method="post">
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
         </div>
         <div class="form-group">
             <input class="form-control" name="password" placeholder="Password" type="password">
         </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
-    </form>
+        <button class="btn btn-primary" type="submit"><span class="tohover"></span>Log In</button>
+    </form> -->
+    <div class="login-box">
+        <h2>Login</h2>
+        <form action="/login" method="post">
+            <div class="user-box">
+                <input type="text" name="username" required>
+                <label for="username">Username</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="pwd" required>
+                <label for="pwd">Password</label>
+            </div>
+            <a href="#">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Submit
+            </a>
+        </form>
+    </div>
 {% endblock %}
