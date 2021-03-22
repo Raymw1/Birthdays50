@@ -14,7 +14,7 @@
         <header>
             <nav>
                 <div class="cropped">
-                    <img src="../static/logo.jpg" class="logo" alt="logo">
+                    <a href="/"><img src="../static/logo.jpg" class="logo" alt="logo"></a>
                 </div>
                     <ul>
                         {% if session.user_id %}
@@ -34,9 +34,7 @@
         </header>
     </div>
 
-    <main>
         {% block main %}{% endblock %}
-    </main>
 
     <footer class="small text-center text-muted">
         <!-- Data provided for free by <a href="https://iextrading.com/developer">IEX</a>. View <a

@@ -5,15 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <!-- <form action="/login" method="post">
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit"><span class="tohover"></span>Log In</button>
-    </form> -->
+<main>
     <div class="login-box">
         <h2>Login</h2>
         <form action="/login" method="post">
@@ -25,13 +17,13 @@
                 <input type="password" name="pwd" required>
                 <label for="pwd">Password</label>
             </div>
-            <a href="#">
+            <button class="novis" type="submit">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
-                Submit
-            </a>
+                Log In</button>
         </form>
     </div>
+</main>
 {% endblock %}
