@@ -48,8 +48,8 @@ def index():
     else:
 
         # people = db.execute("SELECT name, day, month FROM birthdays")
-
-        return render_template("index.html")
+        welcome = True;
+        return render_template("index.html", welcome=welcome)
 
 # @app.route("/")
 # @login_required

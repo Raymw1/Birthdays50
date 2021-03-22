@@ -14,6 +14,14 @@
     background-position: center;
 }
 
+.banner-o {
+  width: 100%;
+  height: 100vh;
+  background: #1a293e;
+  background-size: 1366px;
+  background-position: center;
+}
+
 .cropped {
     width: 90px; /* width of container */
     height: 90px; /* height of container */

@@ -10,7 +10,11 @@
 </head>
 
 <body>
+    {% if welcome %}
     <div class="banner">
+    {% else %}
+    <div class="banner-o">
+    {% endif %}
         <header>
             <nav>
                 <div class="cropped">
