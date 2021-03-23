@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helpers import apology, login_required
-from models import database
+from models import database, users
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
@@ -34,79 +34,38 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = database.db
-@app.route("/", methods=["GET", "POST"])
-def index():
+@app.route("/")
+def welcome():
     session.clear()
-    if request.method == "POST":
-        # name = request.form.get("name")
-        # month = request.form.get("month")
-        # day = request.form.get("day")
-        # db.execute("INSERT INTO birthdays (name, month, day) VALUES(?, ?, ?)", name, month, day)
-        print("0")
-        # return redirect("/")
+    wel = True;
+    return render_template("index.html", welcome=wel)
 
-    else:
-
-        # people = db.execute("SELECT name, day, month FROM birthdays")
-        welcome = True;
-        return render_template("index.html", welcome=welcome)
-
-# @app.route("/")
-# @login_required
-# def index():
-#     user = users.get_user_by_user_id(session["user_id"])
-#     rows = balances.get_balances_by_user_id(user["id"])
-#     stocks = []
-#     for row in rows:
-#         balance = row
-#         stock = lookup(balance["symbol"])
-#         balance["price"] = stock["price"]
-#         balance["total"] = stock["price"] * balance["shares"]
-#         balance["name"] = stock["name"]
-#         stocks.append(balance)
-#     total_spent = user["cash"]
-#     for balance in stocks:
-#         total_spent += balance["total"]
-#     # stocks |  shares  |  current price |  total (shares*price)
-#     """Show portfolio of stocks"""
-#     return render_template("index.html", cash=user["cash"], balances=stocks, spent=total_spent)
-
-
-# @app.route("/history")
-# @login_required
-# def history():
-#     """Show history of transactions"""
-#     rows = hist.get_history_by_user_id(session["user_id"])
-#     return render_template("history.html", history=rows)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form.get("username")
-        password = request.form.get("password")
+        password = request.form.get("pwd")
         confirmation = request.form.get("confirmation")
         # Ensure username was submitted
         if not username:
-            return apology("must provide username", 400)
+            return apology("Provide a username", 400)
 
         # Verify username
         if  users.verify_username(username):
-            return apology("this username is already registered", 400)
-        # Verify username
+            return apology("Provide a username not registered yet", 400)
 
         # Ensure password was submitted
         elif not password:
-            return apology("must provide password", 400)
+            return apology("Provide a password", 400)
 
         elif password != confirmation:
-            return apology("passwords do not match", 400)
+            return apology("Provide passwords matching", 400)
 
         new_user_id = users.register(username, password)
-
-        flash("Registered!", 200)
         session["user_id"] = new_user_id
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/index")
     else:
         return render_template("register.html")
 
@@ -136,11 +95,52 @@ def login():
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/index")
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
 
+@app.route("/index", methods=["GET", "POST"])
+@login_required
+def  index():
+    if request.method == "POST":
+        name = request.form.get("name")
+        month = request.form.get("month")
+        day = request.form.get("day")
+        db.execute("INSERT INTO birthdays (user_id, name, month, day) VALUES(?, ?, ?, ?)",session["user_id"], name, month, day)
+        return redirect("/index")
+
+    else:
+        # people = db.execute("SELECT name, day, month FROM birthdays")
+        return render_template("birthdays.html")
+
+# @app.route("/")
+# @login_required
+# def index():
+#     user = users.get_user_by_user_id(session["user_id"])
+#     rows = balances.get_balances_by_user_id(user["id"])
+#     stocks = []
+#     for row in rows:
+#         balance = row
+#         stock = lookup(balance["symbol"])
+#         balance["price"] = stock["price"]
+#         balance["total"] = stock["price"] * balance["shares"]
+#         balance["name"] = stock["name"]
+#         stocks.append(balance)
+#     total_spent = user["cash"]
+#     for balance in stocks:
+#         total_spent += balance["total"]
+#     # stocks |  shares  |  current price |  total (shares*price)
+#     """Show portfolio of stocks"""
+#     return render_template("index.html", cash=user["cash"], balances=stocks, spent=total_spent)
+
+
+# @app.route("/history")
+# @login_required
+# def history():
+#     """Show history of transactions"""
+#     rows = hist.get_history_by_user_id(session["user_id"])
+#     return render_template("history.html", history=rows)
 
 @app.route("/change_pwd", methods=["GET", "POST"])
 def change_password():

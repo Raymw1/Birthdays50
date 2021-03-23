@@ -135,7 +135,7 @@ nav ul li:hover::after {
     border: none;
 }
 
-/* LOGIN  */
+/* LOGIN  and REGISTER */
 
 html {
   height: 100%;
@@ -147,7 +147,7 @@ body {
   background: linear-gradient(#141e30, #243b55);
 }
 
-.login-box {
+.login-box, .container {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -295,6 +295,7 @@ body {
   animation: btn-anim4 1s linear infinite;
   animation-delay: .75s
 }
+
 .novis {
     background: none;
     border: none;
@@ -309,3 +310,91 @@ body {
     bottom: 100%;
   }
 }
+
+
+/* INDEX */
+
+.birthdays {
+  color: #fff;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center; 
+  
+}
+
+/* 
+.birthdays .container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: center;
+  width: 90%;
+}
+
+.birthdays .jumbotron {
+  background-color: #477bff;
+  color: #fff;
+  margin-bottom: 2rem;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.birthdays .section {
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.5rem;
+}
+
+.birthdays .section:hover {
+  background-color: #f5f5f5;
+  transition: color 2s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.birthdays h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 48px;
+}
+
+.birthdays button, input[type="submit"] {
+  background-color: #d9edff;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 0.375rem 0.75rem;
+  text-align: center;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  vertical-align: middle;
+}
+
+.birthdays input[type="text"], input[type="number"] {
+  line-height: 1.8;
+  width: 25%;
+}
+
+.birthdays input[type="text"]:hover, input[type="number"]:hover {
+  background-color: #f5f5f5;
+  transition: color 2s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.birthdays table {
+  background-color: transparent;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.birthdays able th,
+table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+
+.birthdays tbody tr:nth-of-type(odd) {
+  background-color: rgb(179, 208, 255, 0.3)
+}
+ */
