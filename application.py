@@ -34,12 +34,16 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = database.db
+
+#  --------------------------------------    WELCOME PAGE     ------------------------------
+
 @app.route("/")
 def welcome():
     session.clear()
     wel = True;
     return render_template("index.html", welcome=wel)
 
+#  -------------------------------------     REGISTER PAGE     ------------------------------------------------
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -68,6 +72,8 @@ def register():
         return redirect("/index")
     else:
         return render_template("register.html")
+
+#  ---------------------------------    LOGIN PAGE    -----------------------------------
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -100,6 +106,8 @@ def login():
     else:
         return render_template("login.html")
 
+# -------------------------       BIRTHDAYS PAGE --------------------------------
+
 @app.route("/index", methods=["GET", "POST"])
 @login_required
 def  index():
@@ -107,12 +115,12 @@ def  index():
         name = request.form.get("name")
         month = request.form.get("month")
         day = request.form.get("day")
-        db.execute("INSERT INTO birthdays (user_id, name, month, day) VALUES(?, ?, ?, ?)",session["user_id"], name, month, day)
+        db.execute("INSERT INTO birthdays (user_id, name, month, day) VALUES(?, ?, ?, ?)", session["user_id"], name, month, day)
         return redirect("/index")
 
     else:
-        # people = db.execute("SELECT name, day, month FROM birthdays")
-        return render_template("birthdays.html")
+        birthdays = db.execute("SELECT name, day, month FROM birthdays WHERE user_id = ?", session["user_id"])
+        return render_template("birthdays.html", birthdays=birthdays)
 
 # @app.route("/")
 # @login_required

@@ -140,6 +140,7 @@ nav ul li:hover::after {
 html {
   height: 100%;
 }
+
 body {
   margin:0;
   padding:0;
@@ -182,6 +183,7 @@ body {
   outline: none;
   background: transparent;
 }
+
 .login-box .user-box label {
   position: absolute;
   top:0;
@@ -321,8 +323,22 @@ body {
   top: 50%;
   transform: translateY(-50%);
   text-align: center; 
-  
 }
+
+.input-box {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+  position: relative;
+  align-items: baseline;
+}
+
 
 /* 
 .birthdays .container {
