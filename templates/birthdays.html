@@ -7,18 +7,23 @@
 {% block main %}
 <main class="birthdays">
     <div class="container">
-        <div class="section">
+        <div class="section-birth section">
             <h2>Add a Birthday</h2>
             <form action="/index" method="post" class="add-births">
                 <input  class="input-box" type="text" autocomplete="off" autofocus name="name" id="name" placeholder="Name">
-                <input  class="input-box" type="text" autocomplete="off" name="month" id="month" placeholder="Month" min="1" max="12">
-                <input  class="input-box" type="text" autocomplete="off" name="day" id="day" placeholder="Day" min="1" max="31">
-                <input type="submit" value="Add Birthday">
+                <input  class="input-box" type="number" autocomplete="off" name="month" id="month" placeholder="Month" min="1" max="12">
+                <input  class="input-box" type="number" autocomplete="off" name="day" id="day" placeholder="Day" min="1" max="31">
+                <button class="novis" type="submit">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Register</button>
             </form>
         </div>
-        <div class="section">
+        <div class="section-birth section">
             <h2>All Birthdays</h2>
-            <table>
+            <table border="1">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -27,16 +32,10 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>TODO</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
+                        {% for birthday in birthdays %}
+                            <td>{{ birthday.name }}</td>
+                            <td>{{ birthday.MONTH }}/{{ birthday.DAY }}</td>
+                        {% endfor %}
                     </tr>
                     <!-- TODO: Loop through the database entries to display them in this table -->
                 </tbody>

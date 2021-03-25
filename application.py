@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helpers import apology, login_required
-from models import database, users
+from models import database, users, checkbirth
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application

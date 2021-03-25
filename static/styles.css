@@ -203,7 +203,7 @@ body {
   font-size: 12px;
 }
 
-.login-box form button {
+.login-box form button, .novis {
   position: relative;
   display: inline-block;
   padding: 10px 20px;
@@ -213,11 +213,11 @@ body {
   text-transform: uppercase;
   overflow: hidden;
   transition: .5s;
-  margin-top: 40px;
+  margin-top: 10px;
   letter-spacing: 4px
 }
 
-.login-box button:hover {
+.login-box button:hover, .novis:hover {
   background: #965a00;
   color: #fff;
   border-radius: 5px;
@@ -227,12 +227,12 @@ body {
               0 0 100px #965a00;
 }
 
-.login-box button span {
+.login-box button span, .novis span {
   position: absolute;
   display: block;
 }
 
-.login-box button span:nth-child(1) {
+.login-box button span:nth-child(1), .novis span:nth-child(1) {
   top: 0;
   left: -100%;
   width: 100%;
@@ -250,7 +250,7 @@ body {
   }
 }
 
-.login-box button span:nth-child(2) {
+.login-box button span:nth-child(2), .novis span:nth-child(2) {
   top: -100%;
   right: 0;
   width: 2px;
@@ -269,7 +269,7 @@ body {
   }
 }
 
-.login-box button span:nth-child(3) {
+.login-box button span:nth-child(3), .novis span:nth-child(3) {
   bottom: 0;
   right: -100%;
   width: 100%;
@@ -288,7 +288,7 @@ body {
   }
 }
 
-.login-box button span:nth-child(4) {
+.login-box button span:nth-child(4), .novis span:nth-child(4) {
   bottom: -100%;
   left: 0;
   width: 2px;
@@ -325,8 +325,12 @@ body {
   text-align: center; 
 }
 
+.container {
+  width: 600px;
+}
+
 .input-box {
-  width: 100%;
+  width: 90%;
   padding: 10px 0;
   font-size: 16px;
   color: #fff;
@@ -336,9 +340,24 @@ body {
   outline: none;
   background: transparent;
   position: relative;
-  align-items: baseline;
 }
 
+.section-birth {
+  margin-top: 20px;
+}
+
+
+.birthdays table th,
+table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  width: 100%;
+}
+
+table{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 
 /* 
 .birthdays .container {
@@ -404,13 +423,3 @@ body {
   width: 100%;
 }
 
-.birthdays able th,
-table td {
-  padding: 0.75rem;
-  vertical-align: middle;
-}
-
-.birthdays tbody tr:nth-of-type(odd) {
-  background-color: rgb(179, 208, 255, 0.3)
-}
- */
