@@ -16,8 +16,7 @@
 
 .banner-o {
   width: 100%;
-  height: 100vh;
-  background: #1a293e;
+  height: 60vh;
   background-size: 1366px;
   background-position: center;
 }
@@ -148,7 +147,7 @@ body {
   background: linear-gradient(#141e30, #243b55);
 }
 
-.login-box, .container {
+.login-box {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -320,13 +319,19 @@ body {
   color: #fff;
   width: 100%;
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: center; 
+  text-align: center;
 }
 
 .container {
   width: 600px;
+  position: absolute;
+  margin-top: -250px;
+  left: 29%;
+  padding: 40px;
+  background: rgba(0,0,0,.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  border-radius: 10px;
 }
 
 .input-box {

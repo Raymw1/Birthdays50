@@ -7,7 +7,7 @@
 {% block main %}
 <main class="birthdays">
     <div class="container">
-        <div class="section-birth section">
+        <div class="section-birth">
             <h2>Add a Birthday</h2>
             <form action="/index" method="post" class="add-births">
                 <input  class="input-box" type="text" autocomplete="off" autofocus name="name" id="name" placeholder="Name">
@@ -21,7 +21,7 @@
                 Register</button>
             </form>
         </div>
-        <div class="section-birth section">
+        <div class="section-birth   ">
             <h2>All Birthdays</h2>
             <table border="1">
                 <thead>
@@ -31,12 +31,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        {% for birthday in birthdays %}
+                    {% for birthday in birthdays %}
+                        <tr>
                             <td>{{ birthday.name }}</td>
                             <td>{{ birthday.MONTH }}/{{ birthday.DAY }}</td>
-                        {% endfor %}
-                    </tr>
+                        </tr>
+                    {% endfor %}
                     <!-- TODO: Loop through the database entries to display them in this table -->
                 </tbody>
             </table>
