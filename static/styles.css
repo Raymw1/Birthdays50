@@ -325,7 +325,7 @@ body {
 .container {
   width: 600px;
   position: absolute;
-  margin-top: -250px;
+  margin-top: -300px;
   left: 29%;
   padding: 40px;
   background: rgba(0,0,0,.5);

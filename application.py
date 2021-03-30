@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helpers import apology, login_required
-from models import database, users, checkbirth
+from models import database, users
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
@@ -112,14 +112,24 @@ def login():
 @login_required
 def  index():
     if request.method == "POST":
+        names = db.execute("SELECT name FROM birthdays WHERE user_id = ?", session["user_id"])
         name = request.form.get("name")
-        month = request.form.get("month")
-        day = request.form.get("day")
+        month = int(request.form.get("month"))
+        day = int(request.form.get("day"))
+        if len(name) < 3:
+            return apology("Provide a name with at least 3 letters", 400)
+        for tname in names:
+            if name == tname["name"]:
+                return apology("Provide a name not used yet", 400)
+        if month == 2 and day > 29:
+            return apology("Provide a valid day", 400)
+        elif (month == 4 or month == 6 or month == 9 or month == 11) and day > 30:
+            return apology("Provide a valid day", 400)
         db.execute("INSERT INTO birthdays (user_id, name, month, day) VALUES(?, ?, ?, ?)", session["user_id"], name, month, day)
         return redirect("/index")
 
     else:
-        birthdays = db.execute("SELECT name, day, month FROM birthdays WHERE user_id = ?", session["user_id"])
+        birthdays = db.execute("SELECT name, day, month FROM birthdays WHERE user_id = ? ORDER BY month, day ASC", session["user_id"])
         return render_template("birthdays.html", birthdays=birthdays)
 
 # @app.route("/")
