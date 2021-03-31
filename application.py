@@ -132,56 +132,37 @@ def  index():
         birthdays = db.execute("SELECT name, day, month FROM birthdays WHERE user_id = ? ORDER BY month, day ASC", session["user_id"])
         return render_template("birthdays.html", birthdays=birthdays)
 
-# @app.route("/")
-# @login_required
-# def index():
-#     user = users.get_user_by_user_id(session["user_id"])
-#     rows = balances.get_balances_by_user_id(user["id"])
-#     stocks = []
-#     for row in rows:
-#         balance = row
-#         stock = lookup(balance["symbol"])
-#         balance["price"] = stock["price"]
-#         balance["total"] = stock["price"] * balance["shares"]
-#         balance["name"] = stock["name"]
-#         stocks.append(balance)
-#     total_spent = user["cash"]
-#     for balance in stocks:
-#         total_spent += balance["total"]
-#     # stocks |  shares  |  current price |  total (shares*price)
-#     """Show portfolio of stocks"""
-#     return render_template("index.html", cash=user["cash"], balances=stocks, spent=total_spent)
+# -------------------------  REMOVE FUNCTION --------------------------------
 
+@app.route("/removebirth", methods=["POST"])
+@login_required
+def  removebirth():
+    name = request.form.get("name")
+    db.execute("DELETE FROM birthdays WHERE user_id = ? AND name = ?", session["user_id"], name)
+    return redirect("/index")
 
-# @app.route("/history")
-# @login_required
-# def history():
-#     """Show history of transactions"""
-#     rows = hist.get_history_by_user_id(session["user_id"])
-#     return render_template("history.html", history=rows)
+# @app.route("/change_pwd", methods=["GET", "POST"])
+# def change_password():
+#     if request.method == "POST":
+#         # Ensure password was submitted
+#         if not request.form.get("current_password"):
+#             return apology("must provide current password", 403)
 
-@app.route("/change_pwd", methods=["GET", "POST"])
-def change_password():
-    if request.method == "POST":
-        # Ensure password was submitted
-        if not request.form.get("current_password"):
-            return apology("must provide current password", 403)
+#         if not request.form.get("password"):
+#             return apology("must provide password", 403)
 
-        if not request.form.get("password"):
-            return apology("must provide password", 403)
+#         elif request.form.get("password") != request.form.get("confirmation"):
+#             return apology("passwords do not match", 400)
 
-        elif request.form.get("password") != request.form.get("confirmation"):
-            return apology("passwords do not match", 400)
-
-        updated_successfully = users.update_password(session["user_id"], request.form.get("current_password"), request.form.get("password"))
-        if not updated_successfully:
-            flash("Invalid current password")
-            return render_template("change_password.html")
-        # Redirect user to home page
-        flash("Password updated successfully")
-        return redirect("/")
-    else:
-        return render_template("change_password.html")
+#         updated_successfully = users.update_password(session["user_id"], request.form.get("current_password"), request.form.get("password"))
+#         if not updated_successfully:
+#             flash("Invalid current password")
+#             return render_template("change_password.html")
+#         # Redirect user to home page
+#         flash("Password updated successfully")
+#         return redirect("/")
+#     else:
+#         return render_template("change_password.html")
 
 
 @app.route("/logout")
@@ -193,22 +174,6 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
-
-
-# @app.route("/quote", methods=["GET", "POST"])
-# @login_required
-# def quote():
-#     """Get stock quote."""
-#     if request.method == "POST":
-#         symbol = request.form.get("symbol")
-#         if not symbol:
-#             return apology("missing symbol", 400)
-#         stock = lookup(symbol)
-#         if not stock:
-#             return apology("invalid symbol", 400)
-#         return render_template("quoted.html", stock=stock)
-#     else:
-#         return render_template("quote.html")
 
 
 # @app.route("/buy", methods=["GET", "POST"])

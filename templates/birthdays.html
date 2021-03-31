@@ -36,6 +36,12 @@
                         <tr>
                             <td>{{ birthday.name }}</td>
                             <td>{{ birthday.MONTH }}/{{ birthday.DAY }}</td>
+                            <td>
+                                <form action="/removebirth" method="POST">
+                                    <input type="text" name="name" value="{{ birthday.name }}" hidden>
+                                    <button type="submit"><img src="../static/delete.svg" class="trash"width="20px" alt="Remove"></button>
+                                </form>
+                            </td>
                         </tr>
                     {% endfor %}
                     <!-- TODO: Loop through the database entries to display them in this table -->
@@ -44,5 +50,6 @@
         </div>
         {% endif %}
     </div>
+    <div class="box-space"></div>
 </main>
 {% endblock %}
