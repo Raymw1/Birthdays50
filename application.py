@@ -154,7 +154,7 @@ def  share():
     # name = request.form.get("name")
     # db.execute("DELETE FROM birthdays WHERE user_id = ? AND name = ?", session["user_id"], name)
     # return redirect("/index")
-    return render_template("layout.html")
+    return render_template("share.html")
 
 # @app.route("/change_pwd", methods=["GET", "POST"])
 # def change_password():

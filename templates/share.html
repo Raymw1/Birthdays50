@@ -5,20 +5,35 @@
 {% endblock %}
 
 {% block main %}
-<main class="birthdays">
+<main class="birthdays share">
     <div class="container">
         <div class="section-birth">
-            <h2>Add a Birthday</h2>
-            <form action="/index" method="post" class="add-births">
-                <input  class="input-box" required type="text" autocomplete="off" minlength="3" autofocus name="name" id="name" placeholder="Name">
-                <input  class="input-box" required type="number" autocomplete="off" name="month" id="month" placeholder="Month" min="1" max="12">
-                <input  class="input-box" required type="number" autocomplete="off" name="day" id="day" placeholder="Day" min="1" max="31">
+            <h2>Share a Birthday</h2>
+            <form action="/share" method="post" class="add-births">
+                <p>
+                    <label for="Cookies">
+                      <input id="Cookies" name="yaybox" type="checkbox" value="Cookies" checked />
+                      <span>Chocolate Chip Cookies</span>
+                    </label>
+                  </p>
+                  <p>
+                    <label for="Milk">
+                      <input id="Milk" name="yaybox" type="checkbox" value="Milk" />
+                      <span>Ice Cold Milk</span>
+                    </label>
+                  </p>
+                  <p>
+                    <label for="Other">
+                      <input id="Other" name="yaybox" type="checkbox" value="Other" />
+                      <span>Raspberry-Lemon Pastry with Cream Cheese Frosting and Graham Cracker Crust</span>
+                    </label>
+                  </p>
                 <button class="novis" type="submit">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
-                ADD BIRTHDAY</button>
+                SHARE</button>
             </form>
         </div>
         {% if birthdays != [] %}
