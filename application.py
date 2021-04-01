@@ -116,7 +116,13 @@ def  index():
         name = request.form.get("name")
         month = int(request.form.get("month"))
         day = int(request.form.get("day"))
-        if len(name) < 3:
+        if not name:
+            return apology("Hm, you're clever. Please, provide a name", 400)
+        elif not month:
+            return apology("Hm, you're clever. Please, provide a month", 400)
+        elif not month:
+            return apology("Hm, you're clever. Please, provide a day", 400)
+        elif len(name) < 3:
             return apology("Provide a name with at least 3 letters", 400)
         for tname in names:
             if name == tname["name"]:
@@ -140,6 +146,15 @@ def  removebirth():
     name = request.form.get("name")
     db.execute("DELETE FROM birthdays WHERE user_id = ? AND name = ?", session["user_id"], name)
     return redirect("/index")
+
+
+@app.route("/share", methods=["GET", "POST"])
+@login_required
+def  removebirth():
+    # name = request.form.get("name")
+    # db.execute("DELETE FROM birthdays WHERE user_id = ? AND name = ?", session["user_id"], name)
+    # return redirect("/index")
+    return render_template("layout.html")
 
 # @app.route("/change_pwd", methods=["GET", "POST"])
 # def change_password():

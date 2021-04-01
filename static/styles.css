@@ -300,6 +300,7 @@ body {
 .novis {
     background: none;
     border: none;
+    cursor: pointer;
   }
 
 

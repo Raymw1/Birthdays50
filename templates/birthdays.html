@@ -29,6 +29,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Birthday</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,7 +40,7 @@
                             <td>
                                 <form action="/removebirth" method="POST">
                                     <input type="text" name="name" value="{{ birthday.name }}" hidden>
-                                    <button type="submit"><img src="../static/delete.svg" class="trash"width="20px" alt="Remove"></button>
+                                    <button type="submit" style="cursor: pointer;"><img src="../static/delete.svg" class="trash"width="20px" alt="Remove"></button>
                                 </form>
                             </td>
                         </tr>
