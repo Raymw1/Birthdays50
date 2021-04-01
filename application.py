@@ -150,7 +150,7 @@ def  removebirth():
 
 @app.route("/share", methods=["GET", "POST"])
 @login_required
-def  removebirth():
+def  share():
     # name = request.form.get("name")
     # db.execute("DELETE FROM birthdays WHERE user_id = ? AND name = ?", session["user_id"], name)
     # return redirect("/index")
