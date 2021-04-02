@@ -9,25 +9,11 @@
     <div class="container">
         <div class="section-birth">
             <h2>Share a Birthday</h2>
-            <form action="/share" method="post" class="add-births">
-                <p>
-                    <label for="Cookies">
-                      <input id="Cookies" name="yaybox" type="checkbox" value="Cookies" checked />
-                      <span>Chocolate Chip Cookies</span>
-                    </label>
-                  </p>
-                  <p>
-                    <label for="Milk">
-                      <input id="Milk" name="yaybox" type="checkbox" value="Milk" />
-                      <span>Ice Cold Milk</span>
-                    </label>
-                  </p>
-                  <p>
-                    <label for="Other">
-                      <input id="Other" name="yaybox" type="checkbox" value="Other" />
-                      <span>Raspberry-Lemon Pastry with Cream Cheese Frosting and Graham Cracker Crust</span>
-                    </label>
-                  </p>
+            <form action="/share" method="post" class="add-births" style="margin: 20px;">
+                {% for name in names %}
+                    <input type="checkbox" name="name" id="name" value="{{ name.name }}"> {{ name.name }}
+                {% endfor %}
+                <br>
                 <button class="novis" type="submit">
                 <span></span>
                 <span></span>

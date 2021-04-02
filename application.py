@@ -151,10 +151,13 @@ def  removebirth():
 @app.route("/share", methods=["GET", "POST"])
 @login_required
 def  share():
-    # name = request.form.get("name")
+    if request.method == "POST":
+        print(request.form.getlist("name"))
     # db.execute("DELETE FROM birthdays WHERE user_id = ? AND name = ?", session["user_id"], name)
-    # return redirect("/index")
-    return render_template("share.html")
+        return redirect("/share")
+    else:
+        names = db.execute("SELECT name FROM birthdays WHERE user_id = ?", session["user_id"])
+        return render_template("share.html", names=names)
 
 # @app.route("/change_pwd", methods=["GET", "POST"])
 # def change_password():
