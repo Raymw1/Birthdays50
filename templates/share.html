@@ -6,14 +6,18 @@
 
 {% block main %}
 <main class="birthdays share">
-    <div class="container">
-        <div class="section-birth">
-            <h2>Share a Birthday</h2>
+    <div class="login-box">
+        <h2>Share a Birthday</h2>
             <form action="/share" method="post" class="add-births" style="margin: 20px;">
-                {% for name in names %}
-                    <input type="checkbox" name="name" id="name" value="{{ name.name }}"> {{ name.name }}
-                {% endfor %}
-                <br>
+                <div class="births">
+                    {% for name in names %}
+                    <div class="birth-box"><input type="checkbox" name="name" id="name" value="{{ name.name }}">{{ name.name }}</div>
+                    {% endfor %}
+                </div>
+                <div class="user-box" style="margin-top: 20px;">
+                    <input type="text" name="receiver" required autocomplete="off">
+                    <label for="username">Who is the receiver?</label>
+                </div>
                 <button class="novis" type="submit">
                 <span></span>
                 <span></span>
@@ -21,36 +25,6 @@
                 <span></span>
                 SHARE</button>
             </form>
-        </div>
-        {% if birthdays != [] %}
-        <div class="section-birth">
-            <h2>All Birthdays</h2>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Birthday</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for birthday in birthdays %}
-                        <tr>
-                            <td>{{ birthday.name }}</td>
-                            <td>{{ birthday.MONTH }}/{{ birthday.DAY }}</td>
-                            <td>
-                                <form action="/removebirth" method="POST">
-                                    <input type="text" name="name" value="{{ birthday.name }}" hidden>
-                                    <button type="submit" style="cursor: pointer;"><img src="../static/delete.svg" class="trash"width="20px" alt="Remove"></button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    <!-- TODO: Loop through the database entries to display them in this table -->
-                </tbody>
-            </table>
-        </div>
-        {% endif %}
     </div>
     <div class="box-space"></div>
 </main>

@@ -375,3 +375,8 @@ table{
 
 /* SHARE */
 
+.birth-box {
+  margin: 0 20px 10px 0;
+  display: inline-block;
+}
+
