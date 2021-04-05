@@ -152,8 +152,27 @@ def  removebirth():
 @login_required
 def  share():
     if request.method == "POST":
-        print(request.form.getlist("name"))
-    # db.execute("DELETE FROM birthdays WHERE user_id = ? AND name = ?", session["user_id"], name)
+        births = request.form.getlist("name")
+        receiver = request.form.get("receiver")
+        id_receiver = db.execute("SELECT id FROM users WHERE username = ?", receiver)
+        if not births:
+            return apology("Provide at least 1 birthday", 400)
+        elif not receiver:
+            return apology("Hm, you're clever. Please, provide a receiver", 400)
+        elif not id_receiver:
+            return apology("Please, provide a valid receiver", 400)
+        id_receiver = id_receiver[0]["id"]
+        if id_receiver == session["user_id"]:
+            return apology("Please, provide a valid receiver", 400)
+        for birth in births:
+            if not db.execute("SELECT * FROM birthdays WHERE name = ?", birth):
+                return apology("Hm, you're clever. Please, provide valid birthdays", 400)
+            day = db.execute("SELECT day FROM birthdays WHERE name = ?", birth)
+            day = day[0]["DAY"]
+            month = db.execute("SELECT month FROM birthdays WHERE name = ?", birth)
+            month = month[0]["MONTH"]
+            print(session["user_id"], id_receiver, birth, month, day)
+            db.execute("INSERT INTO shared (sender, receiver, name, month, day) VALUES(?, ?, ?, ?, ?)", session["user_id"], id_receiver, birth, month, day)
         return redirect("/share")
     else:
         names = db.execute("SELECT name FROM birthdays WHERE user_id = ?", session["user_id"])
