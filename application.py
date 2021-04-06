@@ -193,10 +193,10 @@ def share():
 @app.route("/receive")
 @login_required
 def receive():
-    names = db.execute("SELECT * FROM shared WHERE receiver = ?", session["user_id"])
-    names = names[0]
-    print(names)
-    return render_template("friends.html", names=names)
+    sent = db.execute("SELECT * FROM shared WHERE receiver = ?", session["user_id"])
+    births = db.execute("SELECT name, month, day FROM shared WHERE receiver = ?", session["user_id"])
+    # print(names)
+    return render_template("friends.html", births=births)
 
     # births = request.form.getlist("name")
     # receiver = request.form.get("receiver")

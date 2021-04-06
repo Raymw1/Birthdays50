@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Friends
+{% endblock %}
+
+{% block main %}
+<main class="birthdays">
+    <div class="container">
+        <div class="section-birth">
+            <h2>Birthdays Received</h2>
+            <br>
+            {% for c in range(3) %}
+            <h3>Test{{ c }}</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Birthday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for birth in births %}
+                            <tr>
+                                <td>{{ birth.name }}</td>
+                                <td>{{ birth.MONTH }}/{{ birth.DAY }}</td>
+                            </tr>
+                        {% endfor %}
+                        <!-- TODO: Loop through the database entries to display them in this table -->
+                    </tbody>
+                </table>
+                {% endfor %}
+            </div>
+    </div>
+    <div class="box-space"></div>
+</main>
+{% endblock %}
