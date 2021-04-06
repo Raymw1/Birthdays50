@@ -110,7 +110,7 @@ def login():
 
 @app.route("/index", methods=["GET", "POST"])
 @login_required
-def  index():
+def index():
     if request.method == "POST":
         names = db.execute("SELECT name FROM birthdays WHERE user_id = ?", session["user_id"])
         name = request.form.get("name")
@@ -142,19 +142,21 @@ def  index():
 
 @app.route("/removebirth", methods=["POST"])
 @login_required
-def  removebirth():
+def removebirth():
     name = request.form.get("name")
     db.execute("DELETE FROM birthdays WHERE user_id = ? AND name = ?", session["user_id"], name)
     return redirect("/index")
 
+# -------------------------  SEND BIRTHDAYS PAGE --------------------------------
 
 @app.route("/share", methods=["GET", "POST"])
 @login_required
-def  share():
+def share():
     if request.method == "POST":
         births = request.form.getlist("name")
         receiver = request.form.get("receiver")
         id_receiver = db.execute("SELECT id FROM users WHERE username = ?", receiver)
+        shareds = db.execute("SELECT receiver, name FROM shared WHERE sender = ?", session["user_id"])
         if not births:
             return apology("Provide at least 1 birthday", 400)
         elif not receiver:
@@ -165,18 +167,68 @@ def  share():
         if id_receiver == session["user_id"]:
             return apology("Please, provide a valid receiver", 400)
         for birth in births:
+            existing = 0
+            for shared in shareds:
+                # print(birth, id_receiver, shared["receiver"], shared["name"])
+                if shared["receiver"] == id_receiver and shared["name"] == birth:
+                    existing = 1
+                    print(existing)
+                    break
+            if existing == 1:
+                continue
             if not db.execute("SELECT * FROM birthdays WHERE name = ?", birth):
                 return apology("Hm, you're clever. Please, provide valid birthdays", 400)
             day = db.execute("SELECT day FROM birthdays WHERE name = ?", birth)
             day = day[0]["DAY"]
             month = db.execute("SELECT month FROM birthdays WHERE name = ?", birth)
             month = month[0]["MONTH"]
-            print(session["user_id"], id_receiver, birth, month, day)
             db.execute("INSERT INTO shared (sender, receiver, name, month, day) VALUES(?, ?, ?, ?, ?)", session["user_id"], id_receiver, birth, month, day)
         return redirect("/share")
     else:
         names = db.execute("SELECT name FROM birthdays WHERE user_id = ?", session["user_id"])
         return render_template("share.html", names=names)
+
+# -------------------------  RECEIVE BIRTHDAYS PAGE --------------------------------
+
+@app.route("/receive")
+@login_required
+def receive():
+    names = db.execute("SELECT * FROM shared WHERE receiver = ?", session["user_id"])
+    names = names[0]
+    print(names)
+    return render_template("friends.html", names=names)
+
+    # births = request.form.getlist("name")
+    # receiver = request.form.get("receiver")
+    # id_receiver = db.execute("SELECT id FROM users WHERE username = ?", receiver)
+    # shareds = db.execute("SELECT receiver, name FROM shared WHERE sender = ?", session["user_id"])
+    # if not births:
+    #     return apology("Provide at least 1 birthday", 400)
+    # elif not receiver:
+    #     return apology("Hm, you're clever. Please, provide a receiver", 400)
+    # elif not id_receiver:
+    #     return apology("Please, provide a valid receiver", 400)
+    # id_receiver = id_receiver[0]["id"]
+    # if id_receiver == session["user_id"]:
+    #     return apology("Please, provide a valid receiver", 400)
+    # for birth in births:
+    #     existing = 0
+    #     for shared in shareds:
+    #         # print(birth, id_receiver, shared["receiver"], shared["name"])
+    #         if shared["receiver"] == id_receiver and shared["name"] == birth:
+    #             existing = 1
+    #             print(existing)
+    #             break
+    #     if existing == 1:
+    #         continue
+    #     if not db.execute("SELECT * FROM birthdays WHERE name = ?", birth):
+    #         return apology("Hm, you're clever. Please, provide valid birthdays", 400)
+    #     day = db.execute("SELECT day FROM birthdays WHERE name = ?", birth)
+    #     day = day[0]["DAY"]
+    #     month = db.execute("SELECT month FROM birthdays WHERE name = ?", birth)
+    #     month = month[0]["MONTH"]
+    #     db.execute("INSERT INTO shared (sender, receiver, name, month, day) VALUES(?, ?, ?, ?, ?)", session["user_id"], id_receiver, birth, month, day)
+    # return redirect("/share")
 
 # @app.route("/change_pwd", methods=["GET", "POST"])
 # def change_password():

@@ -11,7 +11,7 @@
             <form action="/share" method="post" class="add-births" style="margin: 20px;">
                 <div class="births">
                     {% for name in names %}
-                    <div class="birth-box"><input type="checkbox" name="name" id="name" value="{{ name.name }}">{{ name.name }}</div>
+                    <div class="birth-box"><input type="checkbox" name="name" id="name" value="{{ name.name }}">    {{ name.name }}</div>
                     {% endfor %}
                 </div>
                 <div class="user-box" style="margin-top: 20px;">
