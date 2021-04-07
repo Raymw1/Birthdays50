@@ -178,14 +178,16 @@ def share():
                 continue
             if not db.execute("SELECT * FROM birthdays WHERE name = ?", birth):
                 return apology("Hm, you're clever. Please, provide valid birthdays", 400)
-            day = db.execute("SELECT day FROM birthdays WHERE name = ?", birth)
+            day = db.execute("SELECT day FROM birthdays WHERE name = ? AND user_id = ?", birth, session["user_id"])
             day = day[0]["DAY"]
-            month = db.execute("SELECT month FROM birthdays WHERE name = ?", birth)
+            month = db.execute("SELECT month FROM birthdays WHERE name = ? AND user_id = ?", birth, session["user_id"])
             month = month[0]["MONTH"]
             db.execute("INSERT INTO shared (sender, receiver, name, month, day) VALUES(?, ?, ?, ?, ?)", session["user_id"], id_receiver, birth, month, day)
         return redirect("/share")
     else:
         names = db.execute("SELECT name FROM birthdays WHERE user_id = ?", session["user_id"])
+        if names == []:
+            return apology("Please, you need to create a birthday", 400)
         return render_template("share.html", names=names)
 
 # -------------------------  RECEIVE BIRTHDAYS PAGE --------------------------------
@@ -193,10 +195,39 @@ def share():
 @app.route("/receive")
 @login_required
 def receive():
-    sent = db.execute("SELECT * FROM shared WHERE receiver = ?", session["user_id"])
-    births = db.execute("SELECT name, month, day FROM shared WHERE receiver = ?", session["user_id"])
-    # print(names)
-    return render_template("friends.html", births=births)
+    # sent = db.execute("SELECT * FROM shared WHERE receiver = ?", session["user_id"])
+    births = db.execute("SELECT id, sender, name, month, day FROM shared WHERE receiver = ? ORDER BY sender ASC", session["user_id"])
+    if births == []:
+        return apology("You haven't received any birthday yet")
+    count = 0
+    people = []
+    for birth in births:
+        birther = []
+        if count == 0:
+            id_sender = birth["sender"]
+            count += 1
+            person = {}
+            sender_name = db.execute("SELECT username FROM users WHERE id = ?", id_sender)
+            person["name"] = sender_name[0]["username"]
+            person["births"] = []
+        else:
+            if id_sender != birth["sender"]:
+                people.append(person)
+                id_sender = birth["sender"]
+                count += 1
+                person = {}
+                sender_name = db.execute("SELECT username FROM users WHERE id = ?", id_sender)
+                person["name"] = sender_name[0]["username"]
+                person["births"] = []
+        per = {}
+        per["id"] = birth["id"]
+        per["name"] = birth["name"]
+        per["month"] = birth["MONTH"]
+        per["day"] = birth["DAY"]
+        person["births"].append(per)
+    people.append(person)
+    print(people)
+    return render_template("friends.html", people=people)
 
     # births = request.form.getlist("name")
     # receiver = request.form.get("receiver")
@@ -230,6 +261,15 @@ def receive():
     #     db.execute("INSERT INTO shared (sender, receiver, name, month, day) VALUES(?, ?, ?, ?, ?)", session["user_id"], id_receiver, birth, month, day)
     # return redirect("/share")
 
+# -------------------------  REMOVE SHARED FUNCTION --------------------------------
+
+@app.route("/removesharedbirth", methods=["POST"])
+@login_required
+def removesharedbirth():
+    name = request.form.get("name")
+    db.execute("DELETE FROM shared WHERE id = ?", name)
+    return redirect("/receive")
+
 # @app.route("/change_pwd", methods=["GET", "POST"])
 # def change_password():
 #     if request.method == "POST":
@@ -253,6 +293,7 @@ def receive():
 #     else:
 #         return render_template("change_password.html")
 
+# -------------------------  LOGOUT --------------------------------
 
 @app.route("/logout")
 def logout():
@@ -263,65 +304,6 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
-
-
-# @app.route("/buy", methods=["GET", "POST"])
-# @login_required
-# def buy():
-#     """Buy shares of stock"""
-#     """Get stock quote."""
-#     if request.method == "POST":
-#         symbol = request.form.get("symbol")
-#         shares = int(request.form.get("shares"))
-#         if not symbol:
-#             return apology("missing symbol", 400)
-#         stock = lookup(symbol)
-#         if not stock:
-#             return apology("invalid symbol", 400)
-#         if not shares:
-#             return apology("must provide the number of shares", 400)
-#         symbol = symbol.upper()
-#         total = stock["price"] * shares
-#         row = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
-#         cash = row[0]["cash"]
-#         if cash < total:
-#             return apology("can't afford", 400)
-#         row = db.execute("SELECT * FROM balances WHERE id = ? AND  symbol = ?", session["user_id"], symbol)
-#         if len(row) < 1:
-#             db.execute("INSERT INTO  balances (user_id, symbol, shares) VALUES (?, ?, ?)", session["user_id"], symbol, shares)
-#         else:
-#             balance = row[0]
-#             balance["shares"] += shares
-#             db.execute("UPDATE balances SET shares = ? WHERE id = ?", balance["shares"], balance["id"])
-#         db.execute("INSERT INTO  history (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)", session["user_id"], symbol, shares, stock["price"])
-#         new_cash = cash - total
-#         db.execute("UPDATE  users SET cash = ? WHERE id = ?",  new_cash, session["user_id"])
-#         flash(f"Bought {shares} of {symbol} successfully", "success")
-#         return redirect("/")
-#     else:
-#         return render_template("buy.html")
-
-# @app.route("/sell", methods=["GET", "POST"])
-# @login_required
-# def sell():
-#     if request.method == "POST":
-#         symbol = request.form.get("symbol")
-#         shares = int(request.form.get("shares"))
-#         if not symbol:
-#             return apology("must provide a valid stock symbol", 400)
-#         symbol = symbol.upper()
-#         stock = lookup(symbol)
-#         success, message = balances.sell_user_shares(session["user_id"], symbol, shares)
-#         if not success:
-#             return apology(message, 400)
-#         hist.insert_new_entry(session["user_id"], symbol, shares * -1, stock["price"])
-#         users.add_cash(session["user_id"], stock["price"] * shares, shares)
-#         flash(f"Sold {shares} of {symbol} successfully", "success")
-#         return redirect("/")
-#     else:
-#         stocks = balances.get_positive_stocks(session["user_id"])
-#         return render_template("sell.html", stocks=stocks)
-
 
 def errorhandler(e):
     """Handle error"""

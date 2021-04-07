@@ -1,5 +1,5 @@
 from models.database import db
-from helpers import apology, login_required, usd
+from helpers import apology, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
 def get_user_by_user_id(id):
