@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+<main class="birthdays">
+    <div class="container">
+        <div class="section-birth">
+            <h2>Add a Birthday</h2>
+            <form action="/index" method="post" class="add-births">
+                <input  class="input-box" required type="text" autocomplete="off" minlength="3" autofocus name="name" id="name" placeholder="Name">
+                <input  class="input-box" required type="number" autocomplete="off" name="month" id="month" placeholder="Month" min="1" max="12">
+                <input  class="input-box" required type="number" autocomplete="off" name="day" id="day" placeholder="Day" min="1" max="31">
+                <button class="novis" type="submit">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                ADD BIRTHDAY</button>
+            </form>
+        </div>
+        {% if birthdays != [] %}
+        <div class="section-birth">
+            <h2>All Birthdays</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Birthday</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for birthday in birthdays %}
+                        <tr>
+                            <td>{{ birthday.name }}</td>
+                            <td>{{ birthday.MONTH }}/{{ birthday.DAY }}</td>
+                            <td>
+                                <form action="/removebirth" method="POST">
+                                    <input type="text" name="name" value="{{ birthday.name }}" hidden>
+                                    <button type="submit" style="cursor: pointer;"><img src="../static/delete.svg" class="trash"width="20px" alt="Remove"></button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <!-- TODO: Loop through the database entries to display them in this table -->
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    <div class="box-space"></div>
+</main>
+{% endblock %}

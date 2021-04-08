@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Friends
+{% endblock %}
+
+{% block main %}
+<main class="birthdays">
+    <div class="container">
+        <div class="section-birth">
+            <h2>Birthdays Received</h2>
+            <br>
+            {% for person in people %}
+            <h3>{{ person["name"] }}</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Birthday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for birth in person["births"] %}
+                            <tr>
+                                <td>{{ birth.name }}</td>
+                                <td>{{ birth.month }}/{{ birth.day }}</td>
+                                <td>
+                                    <form action="/removesharedbirth" method="POST">
+                                        <input type="text" name="name" value="{{ birth.id }}" hidden>
+                                        <button type="submit" style="cursor: pointer;"><img src="../static/delete.svg" class="trash"width="20px" alt="Remove"></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <!-- TODO: Loop through the database entries to display them in this table -->
+                    </tbody>
+                </table>
+                {% endfor %}
+            </div>
+    </div>
+    <div class="box-space"></div>
+</main>
+{% endblock %}

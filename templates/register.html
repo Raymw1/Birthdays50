@@ -5,16 +5,29 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/register" method="post">
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="confirmation" placeholder="Confirm password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit">Register</button>
-    </form>
+<main>
+    <div class="login-box">
+        <h2>Register</h2>
+        <form action="/register" method="post">
+            <div class="user-box">
+                <input type="text" name="username" required autocomplete="off">
+                <label for="username">Username</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="pwd" required>
+                <label for="pwd">Password</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="confirmation" required>
+                <label for="confirmation">Confirm Password</label>
+            </div>
+            <button class="novis" type="submit">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Register</button>
+        </form>
+    </div>
+</main>
 {% endblock %}
