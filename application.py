@@ -40,7 +40,7 @@ db = database.db
 @app.route("/")
 def welcome():
     session.clear()
-    wel = True;
+    wel = True
     return render_template("index.html", welcome=wel)
 
 #  -------------------------------------     REGISTER PAGE     ------------------------------------------------
@@ -239,28 +239,26 @@ def removesharedbirth():
     db.execute("DELETE FROM shared WHERE id = ?", name)
     return redirect("/receive")
 
-# @app.route("/change_pwd", methods=["GET", "POST"])
-# def change_password():
-#     if request.method == "POST":
-#         # Ensure password was submitted
-#         if not request.form.get("current_password"):
-#             return apology("must provide current password", 403)
+# -------------------------  CHANGE PASSWORD FUNCTION --------------------------------
 
-#         if not request.form.get("password"):
-#             return apology("must provide password", 403)
-
-#         elif request.form.get("password") != request.form.get("confirmation"):
-#             return apology("passwords do not match", 400)
-
-#         updated_successfully = users.update_password(session["user_id"], request.form.get("current_password"), request.form.get("password"))
-#         if not updated_successfully:
-#             flash("Invalid current password")
-#             return render_template("change_password.html")
-#         # Redirect user to home page
-#         flash("Password updated successfully")
-#         return redirect("/")
-#     else:
-#         return render_template("change_password.html")
+@app.route("/change_pwd", methods=["GET", "POST"])
+@login_required
+def change_password():
+    if request.method == "POST":
+        # Ensure password was submitted
+        if not request.form.get("current_password"):
+            return apology("Provide current password", 403)
+        elif not request.form.get("password"):
+            return apology("Provide password", 403)
+        elif request.form.get("password") != request.form.get("confirmation"):
+            return apology("Provide new passwords matching", 403)
+        updated_successfully = users.update_password(session["user_id"], request.form.get("current_password"), request.form.get("password"))
+        if not updated_successfully:
+            return apology("Provide your current password correctly", 400)
+        # Redirect user to home page
+        return redirect("/index")
+    else:
+        return render_template("change_pwd.html")
 
 # -------------------------  LOGOUT --------------------------------
 

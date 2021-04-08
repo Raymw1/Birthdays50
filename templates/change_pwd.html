@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<main>
+    <div class="login-box">
+        <h2>Change Password</h2>
+        <form action="/change_pwd" method="post">
+            <div class="user-box">
+                <input type="password" autofocus name="current_password" required autocomplete="off">
+                <label for="username">Current Password</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="password" required autocomplete="off">
+                <label for="password">New Password</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="confirmation" required autocomplete="off">
+                <label for="confirmation">Confirm Password</label>
+            </div>
+            <button class="novis" type="submit">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Update Password</button>
+        </form>
+    </div>
+</main>
+{% endblock %}

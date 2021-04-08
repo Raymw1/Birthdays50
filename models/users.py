@@ -26,11 +26,6 @@ def update_password(id, current_password, password):
     new_user_id = db.execute("UPDATE users SET hash = ? WHERE id = ?", hashed_password, id)
     return True
 
-# def add_cash(id, amount, shares):
-#     row = get_user_by_user_id(id)
-#     new_cash = row["cash"] + amount
-#     db.execute("UPDATE  users SET cash = ? WHERE id = ?",  new_cash, id)
-
 def verify_username(username):
     usernamess = []
     usernames = db.execute("SELECT username FROM users")
