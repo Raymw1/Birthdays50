@@ -14,7 +14,7 @@ That's why Birthdays50 exists!
 ### Prerequisites
 - Make sure you have Python3 installed and **you use it to run this program**.
 #### [ ] Install Flask in your machine
-Furthermore, you have to make sure you have Flask installed. If not you can use pip or your favourite package manager to install it.
+Furthermore, you have to make sure you have Flask installed. If not you can use pip or your favorite package manager to install it.
 ```
 pip install flask
 ```
@@ -69,15 +69,15 @@ In this WebApp, you can:
 
 ### Add birthdays
 
-In the index page, you shall be able to add birthdays of anyone you want. You need to write the name of the person, assuming that you didn't use it yet, with a minimum of 3 letters. Then, you need to add the day of the person's birthday. And, finally, you just need to add the month of the person's birthday. Be sure to provide a valid day! After that, the birthday added shall be displayed in your screen, where you can see the name, day and month of the person. If you want to remove any of these, you just need to click in the button, that is on the right side of the birthday.
+On the index page, you shall be able to add the birthdays of anyone you want. You need to write the name of the person, assuming that you didn't use it yet, with a minimum of 3 letters. Then, you need to add the day of the person's birthday. And, finally, you just need to add the month of the person's birthday. Be sure to provide a valid day! After that, the birthday added shall be displayed on your screen, where you can see the name, day, and month of the person. If you want to remove any of these, you just need to click on the button, that is on the right side of the birthday.
 
 ### Share birthdays
 
-In the share page, you can select birthdays that you want to share to other people. In the end of the form, you just need to put the receiver username in platform. Be sure that the username is already registered!
+On the share page, you can select birthdays that you want to share with other people. At the end of the form, you just need to put the receiver username on the platform. Be sure that the username is already registered!
 
 ### Receive birthdays
 
-In the friends page, it will be displayed in your screen, the birthdays that other people shared with you. You will see the username of the person that have sent to you, and below, the birthdays they have sent. When you want, you can remove those you don't want anymore.
+On the friends page, it will be displayed on your screen, the birthdays that other people shared with you. You will see the username of the person that has sent to you, and below, the birthdays they have sent. When you want, you can remove those you don't want anymore.
 
 ---
 ### Do you want to collaborate?
