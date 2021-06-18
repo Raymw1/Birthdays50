@@ -13,7 +13,7 @@ That's why Birthdays50 exists!
 
 ### Prerequisites
 - Make sure you have Python3 installed and **you use it to run this program**.
-#### [ ] Install Flask in your machine
+#### [] Install Flask in your machine
 Furthermore, you have to make sure you have Flask installed. If not you can use pip or your favorite package manager to install it.
 ```
 pip install flask
@@ -34,7 +34,7 @@ cd CS50-Final-Project
 
 #### Setup
 
-[ ] Export the application
+[] Export the application
 First you have to set the FLASK_APP environment variable.
 Standard Way
 ```
@@ -51,7 +51,7 @@ $env:FLASK_APP = "application.py"
 
 #### Running it
 
-[ ] Run the application
+[] Run the application
 ```
 $ python3 -m flask run
 ```
